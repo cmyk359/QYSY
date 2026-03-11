@@ -29,6 +29,7 @@ export const menuToRoute = (menuList: IMenuItem[]) => {
           id: menu.id,
           parentId: menu.parentId,
           keepAlive: true,
+          hidden: menu.hidden || false,
         },
       })
     }

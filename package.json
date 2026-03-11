@@ -67,5 +67,10 @@
     "workerDirectory": [
       "public"
     ]
+  },
+  "eslintConfig": {
+    "rules": {
+      "vue/multi-word-component-names": "off"
+    }
   }
 }

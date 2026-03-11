@@ -19,6 +19,7 @@ export interface IMenuItem {
   createTime?: string
   updateTime?: string
   children?: IMenuItem[]
+  hidden: boolean //菜单是否隐藏
 }
 
 // 菜单列表响应

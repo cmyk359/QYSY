@@ -40,7 +40,8 @@ export type HoverAnimationName =
   | 'magnet'
   | 'squeeze'
   | 'float'
-
+  // 默认无特效
+  | 'none'
 // Props 定义
 interface Props {
   name?: HoverAnimationName
@@ -50,7 +51,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  name: 'scale',
+  name: 'none',
   tag: 'div',
   duration: 300,
   intensity: 'normal',
@@ -85,6 +86,9 @@ const hoverPresets = computed<Record<HoverAnimationName, Variant>>(() => {
   const duration = props.duration
 
   return {
+    // ========== 默认无特效 ==========
+    // 无特效 - 保持原始状态，没有任何动画效果
+    none: initial,
     // ========== 基础动画 ==========
     // 缩放效果 - 纯缩放，中心放大
     scale: {
@@ -287,14 +291,7 @@ const hoverPresets = computed<Record<HoverAnimationName, Variant>>(() => {
 })
 
 // 计算 hover 配置
-const hoverConfig = computed(() => {
-  const preset = hoverPresets.value[props.name]
-  if (!preset) {
-    console.warn(`Hover 动画 "${props.name}" 不存在，使用默认 scale 动画`)
-    return hoverPresets.value.scale
-  }
-  return preset
-})
+const hoverConfig = computed(() => hoverPresets.value[props.name])
 
 // 计算 transition 配置
 const transitionConfig = computed(() => {

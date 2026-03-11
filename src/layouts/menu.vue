@@ -1,16 +1,8 @@
 <template>
   <el-scrollbar>
-    <el-menu
-      :default-active="activeMenu"
-      :collapse="menuStore.isCollapse"
-      :background-color="menuBackgroundColor"
-      :text-color="menuTextColor"
-      :active-text-color="menuActiveTextColor"
-      :mode="menuMode"
-      @select="navigation"
-      class="menu-container"
-      :class="{ '--menu-border': menuStore.isMobile }"
-    >
+    <el-menu :default-active="activeMenu" :collapse="menuStore.isCollapse" :background-color="menuBackgroundColor"
+      :text-color="menuTextColor" :active-text-color="menuActiveTextColor" :mode="menuMode" @select="navigation"
+      class="menu-container" :class="{ '--menu-border': menuStore.isMobile }">
       <Transition name="bounce">
         <el-menu-item class="logo" v-if="themeStore.showLogo">
           <img :src="APP_CONFIG.logoSrc" alt="logo" class="logo-img" />
@@ -81,6 +73,7 @@ const navigation = (key: string) => {
 
 .menu-container {
   height: 100vh;
+
   .logo {
     display: flex;
     align-items: center;
@@ -109,6 +102,7 @@ const navigation = (key: string) => {
 
 .menu-container:not(.el-menu--collapse) {
   width: 13.75rem;
+
   &.el-menu--horizontal {
     width: 100%;
     min-width: 0; // 允许收缩
@@ -163,7 +157,8 @@ const navigation = (key: string) => {
     }
   }
 }
-.el-menu > .el-menu-item:nth-child(1) {
+
+.el-menu>.el-menu-item:nth-child(1) {
   height: 50px;
   padding: 0 10px;
   border-bottom: none !important;

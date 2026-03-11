@@ -17,11 +17,8 @@
           <div class="top-actions">
             <I18nDropdown />
             <HoverAnimateWrapper name="rotate">
-              <IconButton
-                icon="HOutline:Cog6ToothIcon"
-                tooltip="主题配置"
-                @click="themeStore.themeConfigDrawerOpen = true"
-              />
+              <IconButton icon="HOutline:Cog6ToothIcon" tooltip="主题配置"
+                @click="themeStore.themeConfigDrawerOpen = true" />
             </HoverAnimateWrapper>
           </div>
         </div>
@@ -49,8 +46,8 @@
 
     <ThemeConfig />
 
-    <!-- 版权信息 -->
-    <div class="login-copyright">Copyright &copy; 2025 DFANNN</div>
+    <!-- 版权信息
+    <div class="login-copyright">Copyright &copy; 2025 DFANNN</div> -->
   </div>
 </template>
 
@@ -153,10 +150,12 @@ const goToMode = (mode: ILoginMode) => {
         display: flex;
         align-items: center;
         gap: 1rem;
+
         .logo {
           width: 2.5rem;
           height: 2.5rem;
         }
+
         .brand-name {
           font-size: 1.5rem;
           font-weight: 600;
@@ -167,6 +166,7 @@ const goToMode = (mode: ILoginMode) => {
       .top-actions {
         display: flex;
         align-items: center;
+
         .el-link {
           font-size: 0.9rem;
           color: var(--el-text-color-secondary);
@@ -209,20 +209,24 @@ const goToMode = (mode: ILoginMode) => {
 }
 
 @keyframes float-orange {
+
   0%,
   100% {
     transform: translate(0, 0);
   }
+
   50% {
     transform: translate(30px, -20px);
   }
 }
 
 @keyframes float-blue {
+
   0%,
   100% {
     transform: rotate(15deg) translate(0, 0);
   }
+
   50% {
     transform: rotate(20deg) translate(-20px, 30px);
   }

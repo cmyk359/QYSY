@@ -80,6 +80,8 @@ export async function getAll<T = unknown>(tableName: string): Promise<T[]> {
 
     request.onsuccess = () => {
       resolve(request.result)
+      console.log('############')
+      console.log(request.result)
     }
 
     request.onerror = () => {

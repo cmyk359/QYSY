@@ -18,7 +18,7 @@
         :ref="(el) => setTabRef(el, tab.path)"
         @click="navigation(tab.path)"
       >
-        <HoverAnimateWrapper name="wobble" :duration="700">
+        <HoverAnimateWrapper>
           <div style="display: flex; align-items: center; gap: 0.5rem">
             <el-icon class="tabs-page-icon" size="18">
               <component :is="menuStore.iconComponents[tab.icon as string]" />

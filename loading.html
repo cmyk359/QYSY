@@ -1,7 +1,7 @@
 <div id="__app-loading__" class="app-loading">
   <div class="app-loading-content">
     <img src="/logo.svg" alt="logo" class="loading-logo" />
-    <div class="loading-text">DFAN Admin</div>
+    <div class="loading-text">擎源数云</div>
   </div>
 </div>
 
@@ -45,12 +45,8 @@
     flex-direction: column;
     align-items: center;
     gap: 20px;
-  }
-
-  .loading-logo {
-    width: 120px;
-    height: 120px;
-    animation: logoSpin 2s ease-in-out infinite;
+    /* 确保内容容器有固定尺寸，防止布局变化 */
+    min-height: 160px; /* logo高度 + gap + 文字高度 */
   }
 
   @media (max-width: 992px) {
@@ -58,23 +54,40 @@
       width: 80px;
       height: 80px;
     }
+    .app-loading-content {
+      min-height: 140px; /* 调整响应式高度 */
+    }
   }
 
-  @keyframes logoSpin {
+  .loading-logo {
+    width: 120px;
+    height: 120px;
+    transform: scale(1);
+    opacity: 1;
+    will-change: transform, opacity;
+    animation: logoBlink 1.5s ease-in-out infinite;
+  }
+
+  @keyframes logoBlink {
     0% {
-      transform: rotate(0deg) scale(1);
+      transform: scale(1);
+      opacity: 1;
     }
     25% {
-      transform: rotate(90deg) scale(1.1);
+      transform: scale(1);
+      opacity: 0.7;
     }
     50% {
-      transform: rotate(180deg) scale(1);
+      transform: scale(1);
+      opacity: 1;
     }
     75% {
-      transform: rotate(270deg) scale(1.1);
+      transform: scale(1);
+      opacity: 0.7;
     }
     100% {
-      transform: rotate(360deg) scale(1);
+      transform: scale(1);
+      opacity: 1;
     }
   }
 
@@ -84,6 +97,31 @@
     font-weight: 600;
     transition: color 0.3s ease;
     letter-spacing: 1px;
+    /* 固定文字高度，防止渲染时的跳动 */
+    height: 1.5em; /* 固定行高 */
+    line-height: 1.5em; /* 确保文字垂直居中 */
+    /* 防止文字换行 */
+    white-space: nowrap;
+    /* 确保文字不会影响布局 */
+    display: inline-block;
+    /* 添加平滑过渡 */
+    transition: all 0.3s ease;
+    /* 预设字体大小，防止字体加载时的布局抖动 */
+    visibility: hidden; /* 初始隐藏，等字体加载完成后再显示 */
+    /* 添加字体加载完成后的显示动画 */
+    animation: textFadeIn 0.5s ease forwards;
+    animation-delay: 0.2s; /* 稍微延迟显示，确保字体加载 */
+  }
+
+  @keyframes textFadeIn {
+    from {
+      visibility: visible;
+      opacity: 0;
+    }
+    to {
+      visibility: visible;
+      opacity: 1;
+    }
   }
 
   @media (max-width: 992px) {
