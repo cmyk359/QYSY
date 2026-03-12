@@ -6,7 +6,9 @@
           v-for="project in proceededProjects"
           :key="project.id"
           :project="project"
-          @click="handleProjectClick(project)"
+          @click="
+            router.push({ name: 'DetailView', query: { name: project.name, desc: project.desc } })
+          "
         />
       </div>
     </BaseCard>
@@ -165,10 +167,6 @@ const finishedProjects = ref<IProjectItem[]>([
     ],
   },
 ])
-
-const handleProjectClick = (project: IProjectItem) => {
-  ElMessage.success(`点击了项目：${project.name}`)
-}
 </script>
 
 <style scoped lang="scss"></style>

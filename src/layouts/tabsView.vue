@@ -12,11 +12,11 @@
     <div class="tabs-pages" ref="tabsPagesRef">
       <div
         class="tabs-page-item"
-        :class="{ active: tab.path === tabsStore.activePath }"
+        :class="{ active: tab.fullPath === tabsStore.activePath }"
         v-for="tab in tabsStore.tabs"
-        :key="tab.path"
-        :ref="(el) => setTabRef(el, tab.path)"
-        @click="navigation(tab.path)"
+        :key="tab.fullPath"
+        :ref="(el) => setTabRef(el, tab.fullPath)"
+        @click="navigation(tab.fullPath)"
       >
         <HoverAnimateWrapper>
           <div style="display: flex; align-items: center; gap: 0.5rem">
@@ -98,11 +98,11 @@ const tabsPagesRef = useTemplateRef<HTMLDivElement>('tabsPagesRef')
 const tabRefs = new Map<string, HTMLDivElement>()
 
 // 设置标签页引用
-const setTabRef = (el: Element | ComponentPublicInstance | null, path: string) => {
+const setTabRef = (el: Element | ComponentPublicInstance | null, fullPath: string) => {
   if (el && el instanceof HTMLElement) {
-    tabRefs.set(path, el as HTMLDivElement)
+    tabRefs.set(fullPath, el as HTMLDivElement)
   } else {
-    tabRefs.delete(path)
+    tabRefs.delete(fullPath)
   }
 }
 
@@ -154,17 +154,24 @@ watch(
     scrollToActiveTab()
   },
 )
-
+// 监听路由变化，自动添加标签
+watch(
+  () => router.currentRoute.value,
+  (newRoute) => {
+    tabsStore.addTab(newRoute)
+  },
+  { immediate: true },
+)
 // 导航到指定路径
-const navigation = (path: string) => {
-  router.push(path)
-  tabsStore.activePath = path
+const navigation = (fullPath: string) => {
+  router.push(fullPath)
+  tabsStore.activePath = fullPath
   scrollToActiveTab()
 }
 
 // 关闭标签页
 const handleClose = (item: TabItem) => {
-  tabsStore.removeTab(item.path)
+  tabsStore.removeTab(item.fullPath)
   router.push(tabsStore.activePath)
   scrollToActiveTab()
 }
