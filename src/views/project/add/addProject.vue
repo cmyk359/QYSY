@@ -64,8 +64,6 @@
 <script setup lang="ts">
 import BaseCard from '@/components/card/BaseCard.vue'
 import { reactive } from 'vue'
-import { UploadFilled } from '@element-plus/icons-vue'
-
 import { ref } from 'vue'
 
 const size = ref<'default' | 'large' | 'small'>('default')

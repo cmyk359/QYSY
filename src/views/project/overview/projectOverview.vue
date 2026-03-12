@@ -139,16 +139,17 @@ const proceededProjects = ref<IProjectItem[]>([
 const finishedProjects = ref<IProjectItem[]>([
   {
     id: 3,
-    name: 'DFAN 移动端',
-    desc: '全新的 React Native 跨平台应用，完美适配 iOS 和 Android。',
-    time: '2025-11-20',
+    name: '文科答题项目',
+    desc: '在答题模型训练过程中，需要将题目转换成模型可读的模式，因此需要针对图片中的题目进行撰写，画框，分析逻辑，以准确原意图转换成模型可识别的标准格式;',
+    time: '2025-02-10',
     icon: 'HOutline:DevicePhoneMobileIcon',
     color: '#f59e0b',
     progress: 100,
-    status: 'in_progress',
+    status: 'completed',
     members: [
       { name: 'Elijah', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Elijah0' },
       { name: 'Isabella', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Isabella1' },
+      { name: 'Elijah', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Elijah0' },
     ],
   },
   {
@@ -159,7 +160,7 @@ const finishedProjects = ref<IProjectItem[]>([
     icon: 'HOutline:Cog6ToothIcon',
     color: '#ef4444',
     progress: 100,
-    status: 'in_progress',
+    status: 'completed',
     members: [
       { name: 'Mia', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mia0' },
       { name: 'Mason', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mason1' },
