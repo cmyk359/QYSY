@@ -97,7 +97,7 @@
         <div class="slot-section">
           <div class="section-title">项目文档</div>
           <div class="slot-content">
-            <pdfViewer />
+            <pdfViewer :pdfs="pdfList" />
           </div>
         </div>
       </div>
@@ -110,7 +110,17 @@ import pdfViewer from './PdfViewer.vue'
 const route = useRoute()
 const name = computed(() => route.query.name)
 const desc = computed(() => route.query.desc)
-
+const pdfList = [
+  {
+    url: 'https://project.catpaws.top/%E4%BB%BB%E5%8A%A15.3-%E7%BB%93%E6%9E%84%E5%8C%96%E6%A0%87%E6%B3%A8-%E6%96%87%E7%A7%91%E7%AD%94%E9%A2%98-%E6%A0%87%E6%B3%A8%E6%96%B9%E6%A1%881218.pdf',
+    title: '文档一',
+  },
+  {
+    url: 'https://project.catpaws.top/%E6%95%99%E8%BE%85%E5%8A%A0%E5%B7%A5-%E7%B2%BE%E6%A0%87.pdf',
+    title: '文档二',
+  },
+  // ...
+]
 defineOptions({ name: 'TextEllipsisView' })
 
 // 写死的文本内容
