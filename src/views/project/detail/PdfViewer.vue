@@ -1,7 +1,7 @@
 <template>
   <div class="pdf-preview-container">
     <!-- 缩略图区域：显示所有 PDF 的第一页 -->
-    <div class="thumbnail-bar" v-if="pdfs.length > 0">
+    <div class="thumbnail-bar" v-if="pdfs.length > 1">
       <div
         v-for="(pdf, index) in pdfs"
         :key="index"
