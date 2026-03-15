@@ -71,7 +71,7 @@ const props = withDefaults(defineProps<IProps>(), {
   text: '',
   line: 1,
   clickable: true,
-  tooltipType: 'element',
+  tooltipType: 'none',
   width: '100%',
   copyable: false,
 })

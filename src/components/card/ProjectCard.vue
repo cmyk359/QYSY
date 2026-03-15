@@ -12,7 +12,7 @@
         <BaseTag :text="projectStatusComputed.text" :type="projectStatusComputed.type" />
       </div>
       <div class="project-description">
-        <TextEllipsis :text="project.desc" :line="descLine" />
+        <TextEllipsis :text="project.desc" :line="descLine" :tooltipType="none" />
       </div>
 
       <div class="project-progress">

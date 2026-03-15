@@ -3,41 +3,37 @@
     <el-card shadow="never">
       <template #header>
         <div class="card-header">
-          <span class="card-title">{{ name }}</span>
+          <!-- 标题骨架 -->
+          <el-skeleton :loading="loading" animated :rows="2" v-if="loading" />
+          <span class="card-title">{{ projectNameFromQuery }}</span>
           <div class="card-description">
             <p class="description-text">
-              项目时间：2024-06-01 ~ 2024-12-31，参与人数：3人，项目状态：进行中。
+              项目时间：{{ projectDetail?.beginAt || '未知' }} ~
+              {{ projectDetail?.endAt || '未知' }}， 参与人数：{{
+                projectDetail?.members?.length || 0
+              }}人， 项目状态：{{ formatStatus(projectDetail?.status) }}。
             </p>
-            <!--
-            <p class="description-text">
-              <strong>独立使用：</strong>
-              如果你不想使用整个项目，也可以直接复制
-              <code>TextEllipsis</code> 组件源码到自己的项目中使用。该组件主要依赖于
-              <code>element-plus</code>（使用 <code>el-tooltip</code> 组件）和
-              <code>@vueuse/core</code>（使用
-              <code>useClipboard</code>，用于复制功能），使用前请确保已安装这些依赖。组件源码地址：
-              <el-link
-                href="https://github.com/DFANNN/DFAN-Admin/blob/main/src/components/text/TextEllipsis.vue"
-                target="_blank"
-                type="primary"
-                :underline="false"
-              >
-                TextEllipsis.vue
-              </el-link>
-              ，欢迎直接使用或根据需求进行二次开发。
-            </p> -->
           </div>
         </div>
       </template>
 
       <div class="form-container">
+        <!-- 项目介绍骨架 -->
+        <div class="preview-section" v-if="loading">
+          <div class="section-title">项目介绍</div>
+          <div class="preview-content">
+            <el-skeleton animated :rows="2" />
+          </div>
+        </div>
+
+        <!-- 项目介绍 -->
         <div class="preview-section">
           <div class="section-title">
             <span>项目介绍</span>
           </div>
           <div class="preview-content">
             <TextEllipsis
-              :text="ellipsisForm.text"
+              :text="projectDetail?.description || ''"
               :line="ellipsisForm.line"
               :width="ellipsisForm.width"
               :clickable="ellipsisForm.clickable"
@@ -54,28 +50,35 @@
 
         <!-- 项目成员 -->
         <el-divider />
+        <!-- 项目成员骨架 -->
+        <div class="usage-section" v-if="loading">
+          <div class="section-title">项目成员</div>
+          <div class="usage-info">
+            <el-skeleton animated :rows="4" />
+          </div>
+        </div>
+
         <div class="usage-section">
           <div class="section-title">项目成员</div>
           <div class="usage-info">
             <div class="usage-item">
               <div class="comparison-table">
-                <el-table :data="propsTableData" border>
+                <el-table :data="memberTableData" border>
                   <el-table-column prop="name" label="姓名" width="150">
                     <template #default="{ row }">
                       <strong>{{ row.name }}</strong>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="type" label="职责" width="200">
+                  <el-table-column prop="responsibility" label="职责" width="200">
                     <template #default="{ row }">
-                      <code>{{ row.type }}</code>
+                      <code>{{ row.responsibility }}</code>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="default" label="产量" width="150">
+                  <el-table-column prop="output" label="产量" width="150">
                     <template #default="{ row }">
-                      <code>{{ row.default }}</code>
+                      <code>{{ row.output }}</code>
                     </template>
                   </el-table-column>
-                  <!-- <el-table-column prop="description" label="说明" min-width="200" /> -->
                 </el-table>
               </div>
             </div>
@@ -84,6 +87,14 @@
 
         <!-- 项目文档 -->
         <el-divider />
+
+        <div class="slot-section" v-if="loading">
+          <div class="section-title">项目文档</div>
+          <div class="slot-content">
+            <el-skeleton animated :rows="2" />
+          </div>
+        </div>
+
         <div class="slot-section">
           <div class="section-title">项目文档</div>
           <div class="slot-content">
@@ -96,70 +107,74 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import pdfViewer from './PdfViewer.vue'
-const route = useRoute()
-const desc: string = route.query.desc as string
-const name = computed(() => route.query.name)
-//const desc = computed(() => route.query.desc)
-const pdfList = [
-  {
-    url: 'https://project.catpaws.top/%E4%BB%BB%E5%8A%A15.3-%E7%BB%93%E6%9E%84%E5%8C%96%E6%A0%87%E6%B3%A8-%E6%96%87%E7%A7%91%E7%AD%94%E9%A2%98-%E6%A0%87%E6%B3%A8%E6%96%B9%E6%A1%881218.pdf',
-    title: '文档一',
-  },
-  {
-    url: 'https://project.catpaws.top/%E6%95%99%E8%BE%85%E5%8A%A0%E5%B7%A5-%E7%B2%BE%E6%A0%87.pdf',
-    title: '文档二',
-  },
-  // ...
-]
-defineOptions({ name: 'TextEllipsisView' })
+import { projectApi } from '@/api/project'
 
-interface EllipsisForm {
-  text: string
-  line: number
-  width: string | number
-  clickable: boolean
-  copyable: boolean
-  tooltipType: 'element' | 'native' | 'none'
-  placement: string
-  effect: 'dark' | 'light'
-  showAfter: number
-  hideAfter: number
-  offset: number
+const route = useRoute()
+const projectId = route.query.id as string
+const projectNameFromQuery = route.query.name as string // 从 query 获取项目名称
+
+const loading = ref(true) // 加载状态
+
+const projectDetail = ref<any>(null)
+const memberTableData = ref<any[]>([])
+const pdfList = ref<{ url: string; title: string }[]>([])
+
+// 格式化项目状态
+const formatStatus = (status: string) => {
+  const map: Record<string, string> = {
+    in_progress: '进行中',
+    completed: '已完成',
+  }
+  return map[status] || status
 }
 
-const ellipsisForm = ref<EllipsisForm>({
-  text: desc,
+// 加载项目详情
+onMounted(() => {
+  if (projectId) {
+    projectApi
+      .getProjectDetail(projectId)
+      .then((res) => {
+        if (res.code === 200) {
+          projectDetail.value = res.data
+          if (res.data.members) {
+            memberTableData.value = res.data.members.map((m: any) => ({
+              name: m.name,
+              responsibility: m.responsibility,
+              output: m.output,
+            }))
+          }
+          if (res.data.fileLinks) {
+            pdfList.value = res.data.fileLinks.map((url: string, index: number) => ({
+              url: url.startsWith('http') ? url : `https://${url}`,
+              title: `${projectNameFromQuery || '项目文档'} ${index + 1}`,
+            }))
+          }
+        }
+      })
+      .finally(() => {
+        loading.value = false
+      })
+  }
+})
+
+// 文本省略组件的配置
+const ellipsisForm = ref({
   line: 2,
   width: '100%',
   clickable: true,
   copyable: false,
-  tooltipType: 'element',
+  tooltipType: 'element' as const,
   placement: 'top',
-  effect: 'dark',
+  effect: 'dark' as const,
   showAfter: 0,
   hideAfter: 200,
   offset: 12,
 })
 
-// 组件属性表格数据
-const propsTableData = [
-  {
-    name: '王秒',
-    type: '标注',
-    default: '60',
-  },
-  {
-    name: '苟国栋',
-    type: '标注',
-    default: '74',
-  },
-  {
-    name: '杨宁宁',
-    type: '标注',
-    default: '57',
-  },
-]
+defineOptions({ name: 'TextEllipsisView' })
 </script>
 
 <style scoped lang="scss">
